@@ -13,6 +13,7 @@ import './style.css'
   const btn_notif =  document.createElement("button")
   const btn_mens = document.createElement("button")
   const btn_perfil = document.createElement("button")
+  const smsNoResultados = document.createElement("p");
   
   logoHeader.src = "https://res.cloudinary.com/dnju3aw4b/image/upload/v1701854294/Pinterest/Pinterest_icon_qjhnkx.jpg"
   button1header.textContent = "Spa"
@@ -22,6 +23,8 @@ import './style.css'
   btn_mens.textContent = "💭"
   btn_perfil.textContent = "🙍‍♀️"
   inputHeader.classList.add("inputclass")
+  smsNoResultados.textContent = "No se han encontrado resultados"
+  smsNoResultados.classList.add("sms-no-results")
   
   
   document.body.appendChild(header)
@@ -30,6 +33,7 @@ import './style.css'
   div1header.appendChild(button1header)
   div1header.appendChild(button2header)
   header.appendChild(inputHeader)
+  header.appendChild(smsNoResultados);
   header.appendChild(div2header)
   div2header.appendChild(btn_notif)
   div2header.appendChild(btn_mens)
@@ -82,11 +86,11 @@ const createImages = (e) =>{
   
   
   //Accedemos a la APi-------------------------------
-  const access_key = "ek7Wgin7wq4KMEj4EW7GcwRhYnrjq015HpOKVolw9us"
+  const access_key = "fGNMpPZqIOa-fTzwaG5xTElIxL9LbLvZ_jFDwjmWukI"
   
   const endPoint = 'https://api.unsplash.com/search/photos';
   
-  const gallery = document.querySelector(".gallery")
+ /*  const gallery = document.querySelector(".gallery") */
   
   const getImages = async (query) => {
     try {
@@ -95,14 +99,19 @@ const createImages = (e) =>{
         let response = await fetch(endPoint + "?query=" + query + "&client_id=" + access_key);
         let jsonResponse = await response.json();
         let imagesList = await jsonResponse.results;
+        if(imagesList.length > 0){
         createImages(imagesList);
+        smsNoResultados.style.visibility = "hidden"
+        }else {
+          smsNoResultados.style.visibility = "visible"
+        }
       } else {
-        
         sectionFotos.innerHTML = "";
+        smsNoResultados.style.visibility = "hidden"
       }
     } catch (error) {
       const errorMessage = "Hubo algún error";
-      console.log(errorMessage, error);
+      console.log(errorMessage);
     }
   };
   
